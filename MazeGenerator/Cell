@@ -1,0 +1,37 @@
+class Cell {
+  int i, j;
+  float w, h;
+  float x, y;
+
+  boolean wallUP, wallDOWN, wallLEFT, wallRIGHT;
+
+
+  public Cell(int i, int j, float w, float h) {
+    this.i = i;
+    this.j = j;
+    this.w = w;
+    this.h = h;
+    this.x = this.i * this.w;
+    this.y = this.j * this.h;
+
+    this.wallUP = true;
+    this.wallDOWN = true;
+    this.wallLEFT = true;
+    this.wallRIGHT = true;
+
+  }
+
+
+  void show() {
+    stroke(0);
+    strokeWeight(1);
+    if (wallLEFT)
+      line(this.x, this.y, this.x, this.y + this.h);
+    if (wallRIGHT)
+      line(this.x + this.w, this.y, this.x + this.w, this.y + this.h);
+    if (wallUP)
+      line(this.x, this.y, this.x + this.w, this.y);
+    if (wallDOWN)
+      line(this.x, this.y + this.h, this.x + this.w, this.y + this.h);
+  }
+}
