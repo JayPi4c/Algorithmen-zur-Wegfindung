@@ -1,0 +1,113 @@
+// Code basiert auf der Algorithmus des recursive Backtrackers von Wikipedia https://en.wikipedia.org/wiki/Maze_generation_algorithm
+// und der Erinnerung an die Codingchallenge von Daniel Shiffman's the coding train (youtube.com/shiffman)
+Cell cells[][];
+
+float res = 40;
+int cols, rows;
+
+ArrayList<Cell> unvisitedSet;
+ArrayList<Cell> stack;
+
+
+void setup() {
+  size(400, 400);
+
+  cols = floor(width / res);
+  rows = floor(height / res);
+
+}
+
+
+
+void reset(){
+  cells = new Cell[cols][rows];
+  unvisitedSet = new ArrayList<Cell>();
+  for (int i = 0; i < cols; i++) {
+    for (int j = 0; j < rows; j++) {
+      cells[i][j] = new Cell(i, j, res, res);
+      unvisitedSet.add(cells[i][j]);
+    }
+  }
+
+  stack = new ArrayList<Cell>();
+
+}
+
+void draw() {
+  
+  reset();
+  if (frameCount > 1) delay(5000);
+
+  Cell current = cells[0][0];
+  unvisitedSet.remove(current);
+
+  while (unvisitedSet.size() > 0) {
+    Cell chosen = getNextCell(current);
+    if (chosen != null) {
+      stack.add(current);
+      removeWalls(current, chosen);
+      current = chosen;
+      unvisitedSet.remove(current);
+    } else if (stack.size() > 0) {
+      current = stack.remove(stack.size()-1);
+    }
+  }
+
+
+
+
+
+
+  background(255);
+
+  for (int i = 0; i < cols; i++) 
+    for (int j = 0; j < rows; j++) 
+      cells[i][j].show();
+}
+
+Cell getNextCell(Cell c) {
+  int i = c.i;
+  int j = c.j;
+  ArrayList<Cell> tmp = new ArrayList<Cell>();
+
+
+  if (i-1 >= 0 && unvisitedSet.contains(cells[i-1][j]))
+    tmp.add(cells[i-1][j]);
+
+  if (i+1 < cols && unvisitedSet.contains(cells[i+1][j]))
+    tmp.add(cells[i+1][j]);
+
+  if (j+1 < rows  && unvisitedSet.contains(cells[i][j+1]))
+    tmp.add(cells[i][j+1]);
+
+  if (j-1 >= 0  && unvisitedSet.contains(cells[i][j-1]))
+    tmp.add(cells[i][j-1]);
+
+
+
+  return (tmp.size() > 0 ? tmp.get(floor(random(tmp.size()))) : null);
+}
+
+
+void removeWalls(Cell c, Cell n) {
+  int ci = c.i;
+  int cj = c.j;
+  int ni = n.i;
+  int nj = n.j;
+
+  if (ci - ni > 0) {
+    c.wallLEFT = false;
+    n.wallRIGHT = false;
+    return;
+  } else if (ci - ni < 0) {
+    c.wallRIGHT = false;
+    n.wallLEFT = false;
+    return;
+  } else if (cj - nj > 0) {
+    c.wallUP = false;
+    n.wallDOWN = false;
+    return;
+  }
+  c.wallDOWN = false;
+  n.wallUP = false;
+}
