@@ -8,9 +8,10 @@ int cols, rows;
 ArrayList<Cell> unvisitedSet;
 ArrayList<Cell> stack;
 
+boolean recording = false;
 
 void setup() {
-  size(400, 400);
+  size(401, 401);
 
   cols = floor(width / res);
   rows = floor(height / res);
@@ -63,6 +64,12 @@ void draw() {
   for (int i = 0; i < cols; i++) 
     for (int j = 0; j < rows; j++) 
       cells[i][j].show();
+      
+  if (recording) {
+    saveFrame("output/maze##.png");
+    fill(255, 0, 0);
+    ellipse(width - 40, 40, 20, 20);
+  }
 }
 
 Cell getNextCell(Cell c) {
@@ -110,4 +117,10 @@ void removeWalls(Cell c, Cell n) {
   }
   c.wallDOWN = false;
   n.wallUP = false;
+}
+
+
+void keyReleased() {
+  recording = !recording;
+  println("event");
 }
