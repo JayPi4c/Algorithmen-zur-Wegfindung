@@ -33,7 +33,7 @@ void setup() {
 }
 
 void draw() {
-  // Am I still searching?
+//suche ich immernoch?
   if (finished) {
     delay(2000);
     finished = false;
@@ -42,7 +42,7 @@ void draw() {
 
   if (openSet.size() > 0) {
 
-    // Best next option
+    // bester nächster Weg
     int winner = 0;
     for (int i = 0; i < openSet.size(); i++) {
       if (openSet.get(i).getF() < openSet.get(winner).getF()) {
@@ -51,27 +51,27 @@ void draw() {
     }
     current = openSet.get(winner);
 
-    // Did I finish?
+    // bin ich jetzt fertig
     if (current == end) {
       //noLoop();
       finished = true;
       println("Astar: DONE!");
     }
 
-    // Best option moves from openSet to closedSet
+    //bester Weg geht in das closed Set
     openSet.remove(current);
     closedSet.add(current);
 
-    // Check all the neighbors
+    // überprüfe alle Nachbarn
     ArrayList<Cell> neighbors = current.getNeighbors();
     for (int i = 0; i < neighbors.size(); i++) {
       Cell neighbor = neighbors.get(i);
 
-      // Valid next spot?
+      // Ist die Kachel ok?
       if (!closedSet.contains(neighbor)) {
         float tempG = current.getG() + heuristic(neighbor, current);
 
-        // Is this a better path than before?
+        // Ist der Weg besser
         boolean newPath = false;
         if (openSet.contains(neighbor)) {
           if (tempG < neighbor.getG()) {
@@ -84,7 +84,7 @@ void draw() {
           openSet.add(neighbor);
         }
 
-        // Yes, it's a better path
+        // Es ist ein besserer Weg
         if (newPath) {
           neighbor.setH(heuristic(neighbor, end));
           neighbor.setF(neighbor.getG() + neighbor.getH());
@@ -92,7 +92,7 @@ void draw() {
         }
       }
     }
-    // Uh oh, no solution
+    //Es gibt keinen Weg, weil nichts mehr im openSet ist. Alle Wege wurden getestet
   } else {
     println("no solution!");
     delay(2000);
@@ -102,7 +102,7 @@ void draw() {
   }
 
 
-  // Find the path by working backwards
+  // zeichne den weg
   path = new ArrayList<Cell>();
   Cell temp = current;
   path.add(temp);
